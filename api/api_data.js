@@ -317,10 +317,10 @@ define({ "api": [
   {
     "type": "GET",
     "url": "/LINCS/instances/:distil_id/metadata",
-    "title": "Request summary docs by document index (1..N)",
+    "title": "Request metadata",
     "name": "instanceMetadata",
     "group": "LINCS",
-    "description": "<p>Fetch metadata for a given instand by distil_id</p> ",
+    "description": "<p>Fetch metadata for a given instance by distil_id</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -367,8 +367,8 @@ define({ "api": [
   },
   {
     "type": "POST",
-    "url": "/LINCS/instances/query/metadata Request metadata for",
-    "title": "multiple docs",
+    "url": "/LINCS/instances/query/metadata",
+    "title": "Request metadata (multi)",
     "name": "instancesMetadata",
     "group": "LINCS",
     "description": "<p>Fetch metadata for given instance by distil_id</p> ",
@@ -388,7 +388,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "curl -d '{\"keys\": [\"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\", \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\"]}' \\\n      localhost:8085/LINCS/instances/metadata \\\n      -H \"Content-Type: application/json\" *",
+        "content": "curl -d '{\"keys\": [\"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\", \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\"]}' \\\n      localhost:8080/LINCS/instances/metadata \\\n      -H \"Content-Type: application/json\" *",
         "type": "curl"
       }
     ],
