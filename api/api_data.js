@@ -94,64 +94,6 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/LINCS/summaries",
-    "title": "Request summary docs",
-    "name": "deprecatedSummaries",
-    "group": "LINCS",
-    "description": "<p>THIS ENDPOINT IS DEPRECATED.  Please migrate to /LINCS/instances</p> ",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "key",
-            "description": "<p>(distil_id) or key fragment (optional)</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>Number</p> ",
-            "optional": false,
-            "field": "skip",
-            "description": "<p>Starting numerical index.  Default is 0.</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>Number</p> ",
-            "optional": false,
-            "field": "limit",
-            "description": "<p>Ending numerical index. Default is 10.</p> "
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "summaries",
-            "description": "<p>Summary docs in JSON format</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response: ",
-          "content": "HTTP/1.1 200 OK\n{\n[ { id: 'CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05',\n summary: { pert_desc: 'EI-328', pert_type: 'trt_cp', cell_id: 'VCAP' } },\n  { id: 'KDC003_VCAP_120H_X3_B5_DUO52HI53LO:M08',\n summary: { pert_desc: 'SOX5', pert_type: 'trt_sh', cell_id: 'VCAP' } } ]\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "bin/app.js",
-    "groupTitle": "LINCS"
-  },
-  {
-    "type": "GET",
     "url": "/LINCS/instances/:id/controls",
     "title": "Retrieve control data",
     "name": "getControls",
@@ -195,42 +137,21 @@ define({ "api": [
     "groupTitle": "LINCS"
   },
   {
-    "type": "GET",
+    "type": "POST",
     "url": "/LINCS/instances",
-    "title": "Retrieve instance ids by perturbagen or range",
-    "name": "getInstance",
+    "title": "Retrieve multiple instances by id",
+    "name": "getInstances",
     "group": "LINCS",
-    "description": "<p>Retrieves instance ids based on range of perturbagen or index.  Note: if perturbagen is specified, cell line must be specified (because this function queries a view with compound key).  Similarly, if dose and duration are specified, cell line and perturbagen must be also.</p> ",
+    "description": "<p>Retrieves instances by id (Couchbase document id, i.e. meta.id, not pert_id).  We use POST instead of GET to get around GET query string length requirements so you can send lots of IDs.</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "<p>String</p> ",
+            "type": "<p>String[]</p> ",
             "optional": false,
-            "field": "pert",
-            "description": "<p>Name of perturbagen.  Optional (but see above).</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>String</p> ",
-            "optional": false,
-            "field": "cell",
-            "description": "<p>Name of cell line.  Optional (but see above).</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>Numeric</p> ",
-            "optional": false,
-            "field": "dose",
-            "description": "<p>Dose, without units.  Optional (but see above).</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>Numeric</p> ",
-            "optional": false,
-            "field": "duration",
-            "description": "<p>Duration, without units.  Optional (but see above).</p> "
+            "field": "ids",
+            "description": "<p>Ids to retrieve as a legal JSON formatted array</p> "
           }
         ]
       }
@@ -243,14 +164,14 @@ define({ "api": [
             "type": "<p>string</p> ",
             "optional": false,
             "field": "instances",
-            "description": "<p>Instance ids  in JSON format</p> "
+            "description": "<p>Full instance data in JSON format</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response: ",
-          "content": "HTTP/1.1 200 OK\n{\n[ { key: [ 'A375', 'BRD-K73037408', 2.5, 6 ],                                                                                  \n   value:                                                                                                                     \n    { distil_id: 'PCLB001_A375_6H_X1_F2B6_DUO52HI53LO:A08',                                                                   \n      vehicle: 'DMSO' },                                                                                                      \n   id: 'PCLB001_A375_6H_X1_F2B6_DUO52HI53LO:A08' },                                                                           \n { key: [ 'A375', 'BRD-K73037408', 2.5, 6 ],                                                                                  \n   value:                                                                                                                     \n    { distil_id: 'PCLB001_A375_6H_X1_F2B6_DUO52HI53LO:A16',                                                                   \n      vehicle: 'DMSO' },                                                                                                      \n   id: 'PCLB001_A375_6H_X1_F2B6_DUO52HI53LO:A16' },   \n\n    \"...truncated...\"\n]\n}",
+          "content": "HTTP/1.1 200 OK\n{\n}",
           "type": "json"
         }
       ]
@@ -388,7 +309,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "curl -d '{\"keys\": [\"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\", \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\"]}' \\\n      localhost:8080/LINCS/instances/metadata \\\n      -H \"Content-Type: application/json\" *",
+        "content": "curl -d '{\"keys\": [\"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\", \\\n      \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\"]}' \\\n      localhost:8080/LINCS/instances/metadata \\\n      -H \"Content-Type: application/json\"",
         "type": "curl"
       }
     ],
@@ -407,7 +328,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response: ",
-          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\n[  \n{\n   \"key\": \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\",\n   \"metadata\": {\n     \"det_plate\": \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO\",\n     \"is_gold\": true,\n     \"pert_vehicle\": \"DMSO\",\n     \"pert_type\": \"trt_cp\",\n     \"distil_id\": \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\",\n     \"pert_id\": \"BRD-A64228451\",\n     \"pert_desc\": \"EI-328\",\n     \"cell_id\": \"VCAP\",\n     \"pert_time\": 6,\n     \"pert_time_unit\": \"h\",\n     \"pert_dose\": 10,\n     \"pert_dose_unit\": \"um\"\n   },\n   \"id\": \"312240\"\n } *\n... // truncated\n]",
+          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\n[  \n{\n   \"key\": \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\",\n   \"metadata\": {\n     \"det_plate\": \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO\",\n     \"is_gold\": true,\n     \"pert_vehicle\": \"DMSO\",\n     \"pert_type\": \"trt_cp\",\n     \"distil_id\": \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\",\n     \"pert_id\": \"BRD-A64228451\",\n     \"pert_desc\": \"EI-328\",\n     \"cell_id\": \"VCAP\",\n     \"pert_time\": 6,\n     \"pert_time_unit\": \"h\",\n     \"pert_dose\": 10,\n     \"pert_dose_unit\": \"um\"\n   },\n   \"id\": \"312240\"\n } \n... // truncated\n]",
           "type": "json"
         }
       ]
@@ -476,6 +397,88 @@ define({ "api": [
           }
         ]
       },
+      "examples": [
+        {
+          "title": "Success-Response: ",
+          "content": "HTTP/1.1 200 OK\n{\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "bin/app.js",
+    "groupTitle": "LINCS"
+  },
+  {
+    "type": "GET",
+    "url": "/LINCS/instances",
+    "title": "query the instances in various ways",
+    "name": "queryInstances",
+    "group": "LINCS",
+    "description": "<p>submit query as query string (?q={}) in JSON format. Supported queries To Be Determined.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "q",
+            "description": "<p>The query parameters in JSON format</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "limit",
+            "description": "<p>Number of docs to return, default 1000</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "skip",
+            "description": "<p>Number of docs to skip (for paging), default 0</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "cell_line",
+            "description": "<p>Cell line of interest (optional)</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "pert",
+            "description": "<p>perturbagen (pert_desc) of interest (optional)</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "dose",
+            "description": "<p>dose of interest (unitless, optional)</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String</p> ",
+            "optional": false,
+            "field": "duration",
+            "description": "<p>duration of interest (unitless, optional)</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>Logical</p> ",
+            "optional": false,
+            "field": "gold",
+            "description": "<p>; * @apiParam {String}iSuccess {string} instances Instance ids  in JSON format</p> "
+          }
+        ]
+      }
+    },
+    "success": {
       "examples": [
         {
           "title": "Success-Response: ",
