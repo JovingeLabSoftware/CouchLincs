@@ -62,17 +62,7 @@ describe('LINCS methods', function() {
     });
   });
 
-  it.skip('retrieves range of document summaries by key fragment', function(done) {
-    client.get('/LINCS/summaries?key=AML001_CD34_24H_X1', function(err, req, res, data) {
-      if(err) throw(err);
-      checkResponse(res);
-      assert.equal(data.length, 10);
-      done();
-    });
-  });
-
-  //lincs.instSamePlateVehicles("RAD001_MCF7_24H_X3_F1B5_DUO52HI53LO:N02")
-  it.skip('retrieves an instance', function(done) {
+  it('retrieves an instance', function(done) {
     client.get('/LINCS/instances/12', function(err, req, res, data) {
       if (err) {
           throw err;
@@ -84,7 +74,7 @@ describe('LINCS methods', function() {
     });
   });
   
-  it.skip('retrieves control data for given instance', function(done) {
+  it('retrieves control data for given instance', function(done) {
     client.get('/LINCS/instances/12/controls', function(err, req, res, data) {
       if (err) {
           throw err;
@@ -97,8 +87,8 @@ describe('LINCS methods', function() {
     });
   });
 
-  it.skip('retrieves all instances wit.skiph the specified perturbation', function(done) {
-    client.get('/LINCS/instances?cell="SNUC4"&pert="Rottlerin"&dose=9.68&duration=6', function(err, req, res, data) {
+  it.skip('retrieves all instances with the specified perturbation', function(done) {
+    client.get('/LINCS/instances?q={"cell_line":"SNUC4","pert":"Rottlerin","dose":9.68,"duration":6}', function(err, req, res, data) {
       if (err) {
           throw err;
       } else {
@@ -110,8 +100,8 @@ describe('LINCS methods', function() {
     });
   });
   
-  it.skip('retrieves all instances wit.skiph the specified perturbation but any dose or duration', function(done) {
-    client.get('/LINCS/instances?cell="SNUC4"&pert="Rottlerin"', function(err, req, res, data) {
+  it('retrieves all instances with the specified perturbation but any dose or duration', function(done) {
+    client.get('/LINCS/instances?q={"cell":"SNUC4","pert":"Rottlerin"}', function(err, req, res, data) {
       if (err) {
           throw err;
       } else {
@@ -123,7 +113,7 @@ describe('LINCS methods', function() {
     });
   });
 
-  it.skip('inserts instance document wit.skiph numerical ID', function(done) {
+  it('inserts instance document with numerical ID', function(done) {
     client.post('/LINCS/instances', {id: 1, metadata: {cell: "A375", perturbagen: "BRD-K73037408", duration: 24, dose: 2}, 
                                  gene_ids: ['GENE1', 'GENE2', 'GENE3'],
                                  data: [12, 3, 4.1],
@@ -139,24 +129,8 @@ describe('LINCS methods', function() {
     });
   });
 
-  it.skip('inserts instance document wit.skiph string ID', function(done) {
-    client.post('/LINCS/instances', {id: 'one', metadata: {cell: "A375", perturbagen: "BRD-K73037408", duration: 24, dose: 2}, 
-                                 gene_ids: ['GENE1', 'GENE2', 'GENE3'],
-                                 data: [12, 3, 4.1],
-                                 type: "test_instance"}, 
-    function(err, req, res, id) {
 
-      if (err) {
-          throw err;
-      } else {
-          checkResponse(res);
-          assert.ok(id);
-          done();
-      }
-    });
-  });
-
-  it.skip('returns an informative error if required instance fields not provided.', function(done) {
+  it('returns an informative error if required instance fields not provided.', function(done) {
     client.post('/LINCS/instances', {id: 1, metadata: {cell: "A375", perturbagen: "BRD-K73037408", duration: 24, dose: 2}, 
                                  gene_ids: ['GENE1', 'GENE2', 'GENE3'],
                                  data: [12, 3, 4.1]}, // no type!
@@ -167,7 +141,7 @@ describe('LINCS methods', function() {
   });
 
 
-  it.skip('inserts zscore document', function(done) {
+  it('inserts zscore document', function(done) {
     client.post('/LINCS/pert', {cell: "A375", perturbagen: "BRD-K73037408", duration: 24, dose: 2,  
                                       gene_ids: ['GENE1', 'GENE2', 'GENE3'],
                                       data: [12, 3, 4.1],
@@ -198,7 +172,7 @@ describe('LINCS methods', function() {
     });
   });
   
-  it.skip('retrieves the appropriate shRNA controls.', function(done) {
+  it('retrieves the appropriate shRNA controls.', function(done) {
 
     client.get('/LINCS/instances/5/sh_controls', function(err, req, res, data) {
       if (err) {

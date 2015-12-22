@@ -1,0 +1,3 @@
+CREATE INDEX det_plate ON LINCS(metadata.det_plate) USING GSI
+CREATE INDEX `cell_pert` ON `LINCS`((`metadata`.`cell_id`), (`metadata`.`pert_desc`), (`metadata`.`pert_dose`), (`metadata`.`pert_time`), (`metadata`.`is_gold`)) USING GSI
+CREATE INDEX distil_id ON LINCS(metadata.distil_id) USING GSI

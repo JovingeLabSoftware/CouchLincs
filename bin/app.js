@@ -83,7 +83,7 @@ server.get('/LINCS', function(req, res){
 
 server.get('/LINCS/instances/:distil_id/metadata', function(req, res){
     var key = req.params.distill_id;
-    lincs.getSummaries(key, 0, 1, function(err, data) {
+    lincs.getMetadata(key, 0, 1, function(err, data) {
         if(err) {
             res.send(400, err);
         } else {
@@ -145,6 +145,28 @@ server.post('/LINCS/instances/metadata', function(req, res){
 
 
 /**
+ * @api {GET} /LINCS/instances/:id retrieve instance by id
+ * @apiName getInstance
+ * @apiGroup LINCS
+ * @apiDescription Ket instance by couchbase id (not distil_id)
+ * @apiParam {string} id The id of the instance document to retrieve
+ * @apiSuccess {string} instances Instance in JSON format
+ * @apiSuccessExample Success-Response: 
+ * HTTP/1.1 200 OK
+ * {
+ * }
+ */
+server.get('/LINCS/instances/:id', function(req, res) {
+  lincs.get(req.params.id, null, function(err, data) {
+      if(err) {
+          res.send(400, err);
+      } else {
+          res.send(200, data[0]);
+      }
+  });
+});
+
+/**
  * @api {GET} /LINCS/instances retrieve instances by ids or query
  * @apiName queryInstances
  * @apiGroup LINCS
@@ -172,7 +194,6 @@ server.post('/LINCS/instances/metadata', function(req, res){
 server.get('/LINCS/instances', function(req, res) {
     var query = JSON.parse(req.params.q)
     if(query.ids) {
-      console.log(query.ids)
       lincs.get(query.ids, null, function(err, data) {
           if(err) {
               res.send(400, err);
