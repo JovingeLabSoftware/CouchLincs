@@ -93,6 +93,64 @@ define({ "api": [
     "groupTitle": "LINCS"
   },
   {
+    "type": "POST",
+    "url": "/LINCS/instances/distil_id",
+    "title": "Request data by distil_id (multi)",
+    "name": "distilIdsData",
+    "group": "LINCS",
+    "description": "<p>Fetch metadata for given instance by distil_id.  We use POST here because keys are long and could quickly exceed GET query string limit imposed by many clients.</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>string[]</p> ",
+            "optional": false,
+            "field": "ids",
+            "description": "<p>distilIds of instances</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>string[]</p> ",
+            "optional": false,
+            "field": "fields",
+            "description": "<p>fields to return (defaults to all data)</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl -d '{\"ids\": [\"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\", \\\n      \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\"]}' \\\n      localhost:8080/LINCS/instances/distil_id \\\n      -H \"Content-Type: application/json\"",
+        "type": "curl"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "data",
+            "description": "<p>docs in JSON format</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response: ",
+          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\n[  \n{\n   \"data\": { ... }\n   \"gene_ids\": { ... }\n   \"metadata\": { ... },\n   \"id\": \"312240\"\n } \n... // truncated\n]",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "bin/app.js",
+    "groupTitle": "LINCS"
+  },
+  {
     "type": "GET",
     "url": "/LINCS/instances/:id/controls",
     "title": "Retrieve control data",
@@ -149,11 +207,11 @@ define({ "api": [
   },
   {
     "type": "GET",
-    "url": "/LINCS/instances/:distil_id/metadata",
-    "title": "Request metadata",
-    "name": "instanceMetadata",
+    "url": "/LINCS/instances/distil_id/:distil_id",
+    "title": "Request instance by distil_id",
+    "name": "instanceByDistil_id",
     "group": "LINCS",
-    "description": "<p>Fetch metadata for a given instance by distil_id</p> ",
+    "description": "<p>Fetch data for a given instance by distil_id</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
@@ -163,6 +221,64 @@ define({ "api": [
             "optional": false,
             "field": "distil_id",
             "description": "<p>Id of instance</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl localhost:8080/LINCS/instances/\\\n   CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05",
+        "type": "curl"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "data",
+            "description": "<p>Data doc in JSON format</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response: ",
+          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\n{\n  \"data\": { ... },\n  \"gene_ids\": { ... },\n  \"metadata\": { ... },\n  \"id\": \"1230884\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "bin/app.js",
+    "groupTitle": "LINCS"
+  },
+  {
+    "type": "GET",
+    "url": "/LINCS/instances/distil_id/:distil_id/:fields",
+    "title": "Request instance by distil_id",
+    "name": "instanceByDistil_idWithField",
+    "group": "LINCS",
+    "description": "<p>Fetch specific field of data for a given instance by distil_id</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>string</p> ",
+            "optional": false,
+            "field": "distil_id",
+            "description": "<p>Id of instance</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>string</p> ",
+            "optional": false,
+            "field": "fields",
+            "description": "<p>optional list of fields in JSON format (e.g. {fields = [metadata.pert_desc, metadata.pert_id]} to limit data returned.  Default is all data.</p> "
           }
         ]
       }
@@ -189,7 +305,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response: ",
-          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\n{\n  \"metadata\": {\n    \"det_plate\": \"AML001_CD34_24H_X1_F1B10\",\n    \"is_gold\": true,\n    \"pert_vehicle\": \"DMSO\",\n    \"pert_type\": \"trt_cp\",\n    \"distil_id\": \"AML001_CD34_24H_X1_F1B10:A03\",\n    \"pert_id\": \"BRD-K49071277\",\n    \"pert_desc\": \"SECURININE\",\n    \"cell_id\": \"CD34\",\n    \"pert_time\": 24,\n    \"pert_time_unit\": \"h\",\n    \"pert_dose\": 10,\n    \"pert_dose_unit\": \"um\"\n  },\n  \"id\": \"1230884\"\n}",
+          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\n{\n  \"data\": { ... },\n  \"metadata\": { ... },\n  \"gene_ids\": { ... },\n  \"id\": \"1230884\"\n}",
           "type": "json"
         }
       ]
@@ -199,21 +315,21 @@ define({ "api": [
     "groupTitle": "LINCS"
   },
   {
-    "type": "POST",
-    "url": "/LINCS/instances/query/metadata",
-    "title": "Request metadata (multi)",
-    "name": "instancesMetadata",
+    "type": "GET",
+    "url": "/LINCS/instances/:id",
+    "title": "Request instance by id",
+    "name": "instanceById",
     "group": "LINCS",
-    "description": "<p>Fetch metadata for given instance by distil_id.  We use POST here because keys are long and could quickly exceed GET query string limit imposed by many clients.</p> ",
+    "description": "<p>Fetch data for a given instance by id</p> ",
     "parameter": {
       "fields": {
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "<p>string[]</p> ",
+            "type": "<p>String</p> ",
             "optional": false,
-            "field": "keys",
-            "description": "<p>distilIds of instances</p> "
+            "field": "id",
+            "description": "<p>Id of instance</p> "
           }
         ]
       }
@@ -221,7 +337,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "curl -d '{\"keys\": [\"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\", \\\n      \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\"]}' \\\n      localhost:8080/LINCS/instances/metadata \\\n      -H \"Content-Type: application/json\"",
+        "content": "curl localhost:8080/LINCS/instances/2",
         "type": "curl"
       }
     ],
@@ -232,15 +348,66 @@ define({ "api": [
             "group": "Success 200",
             "type": "<p>Object</p> ",
             "optional": false,
-            "field": "metadata",
-            "description": "<p>Metadats docs in JSON format</p> "
+            "field": "data",
+            "description": "<p>data docs in JSON format</p> "
           }
         ]
       },
       "examples": [
         {
           "title": "Success-Response: ",
-          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\n[  \n{\n   \"key\": \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\",\n   \"metadata\": {\n     \"det_plate\": \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO\",\n     \"is_gold\": true,\n     \"pert_vehicle\": \"DMSO\",\n     \"pert_type\": \"trt_cp\",\n     \"distil_id\": \"CPC014_VCAP_6H_X2_F1B3_DUO52HI53LO:P05\",\n     \"pert_id\": \"BRD-A64228451\",\n     \"pert_desc\": \"EI-328\",\n     \"cell_id\": \"VCAP\",\n     \"pert_time\": 6,\n     \"pert_time_unit\": \"h\",\n     \"pert_dose\": 10,\n     \"pert_dose_unit\": \"um\"\n   },\n   \"id\": \"312240\"\n } \n... // truncated\n]",
+          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\n{\n  \"data\": { ... },\n  \"metadata\": { ... },\n  \"timestamp\": \"2015-12-18 03:52:52\",\n  \"id\": \"1230884\"\n}",
+          "type": "json"
+        }
+      ]
+    },
+    "version": "0.0.0",
+    "filename": "bin/app.js",
+    "groupTitle": "LINCS"
+  },
+  {
+    "type": "GET",
+    "url": "/LINCS/instances",
+    "title": "Query instances",
+    "name": "instanceQuery",
+    "group": "LINCS",
+    "description": "<p>Fetch data for instances matching query</p> ",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "<p>string</p> ",
+            "optional": false,
+            "field": "q",
+            "description": "<p>query parameters in JSON format, e.g.: {field1: value, field2: [values]}</p> "
+          }
+        ]
+      }
+    },
+    "examples": [
+      {
+        "title": "Example usage:",
+        "content": "curl localhost:8080/LINCS/instances?ids=[1,2,3]",
+        "type": "curl"
+      }
+    ],
+    "success": {
+      "fields": {
+        "Success 200": [
+          {
+            "group": "Success 200",
+            "type": "<p>Object</p> ",
+            "optional": false,
+            "field": "data",
+            "description": "<p>data docs in JSON format</p> "
+          }
+        ]
+      },
+      "examples": [
+        {
+          "title": "Success-Response: ",
+          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\n{\n [\n  \"data\": { ... },\n  \"metadata\": { ... },\n  \"timestamp\": \"2015-12-18 03:52:52\",\n  \"id\": \"1230884\"\n ]\n}",
           "type": "json"
         }
       ]
@@ -306,206 +473,6 @@ define({ "api": [
             "optional": false,
             "field": "response",
             "description": "<p>response</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response: ",
-          "content": "HTTP/1.1 200 OK\n{\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "bin/app.js",
-    "groupTitle": "LINCS"
-  },
-  {
-    "type": "GET",
-    "url": "/LINCS/instances/:id",
-    "title": "retrieve instances by ids or query",
-    "name": "queryInstances",
-    "group": "LINCS",
-    "description": "<p>submit query as query string (?q={}) in JSON format. Supported queries To Be Determined.  Note that at the moment, this endpoint makes use of a multi-key view.  Keys for such views are hierarchical.  Thus, if you specify pert, you must specify cell_line, and so on.  Hierarchy is cell_line &gt; pert &gt; dose &gt; duration</p> ",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q",
-            "description": "<p>The query parameters in JSON format</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.ids",
-            "description": "<p>Array of explicit ids to fetch. If this parameter is provided, the parameters below are ignored.</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.limit",
-            "description": "<p>Number of docs to return, default 1000</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.skip",
-            "description": "<p>Number of docs to skip (for paging), default 0</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.cell_line",
-            "description": "<p>Cell line of interest (optional)</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.pert",
-            "description": "<p>perturbagen (pert_desc) of interest (optional)</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.dose",
-            "description": "<p>dose of interest (unitless, optional)</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.duration",
-            "description": "<p>duration of interest (unitless, optional)</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>logical</p> ",
-            "optional": false,
-            "field": "q.gold",
-            "description": "<p>Whether to limit to is_gold instances, default false</p> "
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "instances",
-            "description": "<p>Instance ids  in JSON format</p> "
-          }
-        ]
-      },
-      "examples": [
-        {
-          "title": "Success-Response: ",
-          "content": "HTTP/1.1 200 OK\n{\n}",
-          "type": "json"
-        }
-      ]
-    },
-    "version": "0.0.0",
-    "filename": "bin/app.js",
-    "groupTitle": "LINCS"
-  },
-  {
-    "type": "GET",
-    "url": "/LINCS/instances",
-    "title": "retrieve instances by ids or query",
-    "name": "queryInstances",
-    "group": "LINCS",
-    "description": "<p>submit query as query string (?q={}) in JSON format. Supported queries To Be Determined.  Note that at the moment, this endpoint makes use of a multi-key view.  Keys for such views are hierarchical.  Thus, if you specify pert, you must specify cell_line, and so on.  Hierarchy is cell_line &gt; pert &gt; dose &gt; duration</p> ",
-    "parameter": {
-      "fields": {
-        "Parameter": [
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q",
-            "description": "<p>The query parameters in JSON format</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.ids",
-            "description": "<p>Array of explicit ids to fetch. If this parameter is provided, the parameters below are ignored.</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.limit",
-            "description": "<p>Number of docs to return, default 1000</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.skip",
-            "description": "<p>Number of docs to skip (for paging), default 0</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.cell_line",
-            "description": "<p>Cell line of interest (optional)</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.pert",
-            "description": "<p>perturbagen (pert_desc) of interest (optional)</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.dose",
-            "description": "<p>dose of interest (unitless, optional)</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q.duration",
-            "description": "<p>duration of interest (unitless, optional)</p> "
-          },
-          {
-            "group": "Parameter",
-            "type": "<p>logical</p> ",
-            "optional": false,
-            "field": "q.gold",
-            "description": "<p>Whether to limit to is_gold instances, default false</p> "
-          }
-        ]
-      }
-    },
-    "success": {
-      "fields": {
-        "Success 200": [
-          {
-            "group": "Success 200",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "instances",
-            "description": "<p>Instance ids  in JSON format</p> "
           }
         ]
       },
