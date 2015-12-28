@@ -377,10 +377,17 @@ define({ "api": [
         "Parameter": [
           {
             "group": "Parameter",
-            "type": "<p>string</p> ",
-            "optional": false,
-            "field": "q",
-            "description": "<p>query parameters in JSON format, e.g.: {field1: value, field2: [values]}</p> "
+            "type": "<p>String[]</p> ",
+            "optional": true,
+            "field": "ids",
+            "description": "<p>Optional explicit list of primary ids</p> "
+          },
+          {
+            "group": "Parameter",
+            "type": "<p>String[]</p> ",
+            "optional": true,
+            "field": "fields",
+            "description": "<p>Optional list of fields to return, e.g. [metadata.pert_desc, gene_ids]</p> "
           }
         ]
       }
@@ -388,7 +395,7 @@ define({ "api": [
     "examples": [
       {
         "title": "Example usage:",
-        "content": "curl localhost:8080/LINCS/instances?ids=[1,2,3]",
+        "content": "curl -G \"http://localhost:8085/LINCS/instances\" --data-urlencode \"ids=[1,2,3]\" --data-urlencode fields='[\"metadata.pert_type\"]'",
         "type": "curl"
       }
     ],
@@ -407,7 +414,7 @@ define({ "api": [
       "examples": [
         {
           "title": "Success-Response: ",
-          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\n{\n [\n  \"data\": { ... },\n  \"metadata\": { ... },\n  \"timestamp\": \"2015-12-18 03:52:52\",\n  \"id\": \"1230884\"\n ]\n}",
+          "content": "HTTP/1.1 200 OK\nContent-Type: application/json\n{\n  [\n    {\n      \"id\":\"1\",\n      \"pert_type\":\"trt_cp\"\n      },\n      {\n         \"id\":\"2\",\n         \"pert_type\":\"trt_cp\"\n          \n      },\n      {\n        \"id\":\"3\",\n        \"pert_type\":\"trt_cp\"\n      }\n    ]\n}",
           "type": "json"
         }
       ]
