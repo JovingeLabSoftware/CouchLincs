@@ -2,7 +2,7 @@ var config = {
 	'prod': {
  	    'version': 1.0,
   		'couchdb': {
-			'ip': '52.35.203.212',
+			'ip': '10.152.220.31',
 			'bucket': 'LINCS',
 			'port': 8091,
 			'password': null
@@ -11,7 +11,7 @@ var config = {
 	'devel': {
  	    'version': 1.0,
   		'couchdb': {
-			'ip': '52.35.203.212',
+			'ip': '10.152.220.31',
 			'bucket': 'LINCS',
 			'port': 8091,
 			'password': null

@@ -71,7 +71,7 @@ describe('LINCS funtion tests', function () {
 		    					 pert_desc: "lacZ"}, 
 		    					 ["metadata.pert_desc", "metadata.pert_dose"])
 		    .then(function(data) {
-				assert.equal(data[0].pert_desc, "lacZ");	
+				assert.equal(data[0].pert_desc, "lacz");	
 				assert.equal(data.length, 2);	
 				done();
 		    })
@@ -105,6 +105,21 @@ describe('LINCS funtion tests', function () {
 			});	
         });
 
+        it('retrieves a count of instances matching query (same cell line, perturbation, dose, duration)', function (done) {
+		    this.timeout(5000);
+		    lincs.instanceCount({cell_id: "A549",
+		    					 pert_desc: "BMP7",
+		    					 pert_dose: 100,
+		    					 pert_time: 2 })
+		    .then(function(count) {
+		    	assert.equal(count, 3);
+				done();
+		    })
+		    .catch(function(e) {
+		    	done(e);
+		    });
+        });
+
         it('retrieves all related instances (same cell line, perturbation, dose, duration)', function (done) {
 		    this.timeout(5000);
 		    lincs.instanceQuery({cell_id: "A549",
@@ -132,7 +147,7 @@ describe('LINCS funtion tests', function () {
   			    return(p);
 	    	})
 			.then(function(res) {
-		    	assert.equal(res.length , 13);
+		    	assert.equal(res.length , 12);
 				done();
 		    })
 		    .catch(function(e) {
